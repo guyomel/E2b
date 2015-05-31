@@ -1,4 +1,4 @@
- const int  
+const int  
   PIECES = 256
 , TEST = 0
 , VERBOSE = 1
@@ -109,7 +109,7 @@ bool fichier_hash
 
 void affichage_progression
 (
-int& niveau
+  int& niveau
 , int& niveau_ref
 , std::vector<int>& progression
 , std::vector<int>& R)
@@ -257,7 +257,7 @@ void rotation_pieces
 
 void evaluation_individu
 (
-std::vector<int>& A
+  std::vector<int>& A
 , std::vector<int>& B
 , std::vector<int>& C
 , std::vector<int>& D
