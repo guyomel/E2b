@@ -112,7 +112,8 @@ void affichage_progression
   int& niveau
 , int& niveau_ref
 , std::vector<int>& progression
-, std::vector<int>& R)
+, std::vector<int>& R
+)
 {
 	niveau_ref = niveau;
 
