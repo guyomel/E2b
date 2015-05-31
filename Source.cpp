@@ -8,13 +8,10 @@ int main()
 {
 	unsigned long long int compteur;
 
-	int population = POPULATION;
-
 	int i, j;
-	int nb_lignes = (int)sqrt(PIECES);
-
 	int niveau;
 	int nb_solutions = 0;
+	int nb_lignes = (int)sqrt(PIECES);
 
 	std::string Chemin;
 
@@ -24,13 +21,13 @@ int main()
 	Chemin = "/Users/lethuillierd/Dropbox/Partage/";
 	#endif
 
-	// log $
+	// log
 	std::string TXT_log = Chemin + "Logs/log_" + std::to_string(PIECES) + ".txt";
 	std::ofstream log(TXT_log, std::ios_base::app | std::ios_base::out);
 	log << "#" << std::endl;
 
-	// 1| OUVERTURE PUZZLE_.TXT
-	std::vector<int> R_, A_, B_, C_, D_;
+	// Ouverture puzzle_.txt
+	std::vector<int> R_, A_, B_, C_, D_; // REF
 
 	if (!(fichier_ouverture(Chemin, R_, A_, B_, C_, D_)))
 	{
@@ -45,28 +42,27 @@ int main()
 			return 0;
 		}
 		
-	std::vector<int> R, A, B, C, D;
+	std::vector<int> R, A, B, C, D; // COPIES
 	R = R_;  A = A_; B = B_; C = C_, D = D_;
 	
-
 	bool fin_recherche = false;
 	Noeud * _emplacements = new Noeud[PIECES];
 
 	std::vector<int> rotations;
 
-	Individu * _rotations = new Individu[population];
+	Individu * _rotations = new Individu[POPULATION];
 
 	std::uniform_int_distribution<> aleADN(0, 3);
 	std::uniform_int_distribution<> mutation(0, PIECES-1);
 	
-	for (i = 0; i < population; i++)
+	for (i = 0; i < POPULATION; i++)
 		_rotations[i].ADN.resize(PIECES);
 
 	std::unordered_map<int, double> classement_individus;
 
 	std::vector<int> retenus;
 	std::vector<double> classement_fitness;
-	classement_fitness.resize(population);
+	classement_fitness.resize(POPULATION);
 
 	int best;
 	double fitness_ref;
@@ -77,7 +73,7 @@ int main()
 	Reset: 
 	
 		// Nouveaux individus
-		for (i = 0; i < population; ++i)
+		for (i = 0; i < POPULATION; ++i)
 		{
 			for (j = 0; j < PIECES; ++j)
 				_rotations[i].ADN[j] = aleADN(gen);
@@ -85,15 +81,15 @@ int main()
 
 		fitness_ref = 0.0;
 
-		for (i = 0; i < population; ++i)
+		for (i = 0; i < POPULATION; ++i)
 			_rotations[i].fitness = 0.0;
 
 		compteur = 0;
 
 
 /*
-//  ROTATIONS
-// -----------
+//  ROTATIONS (ALGORITHME GENETIQUE)
+// ----------------------------------
 */
 
 
@@ -102,7 +98,7 @@ int main()
 		do
 		{
 
-			for (i = 0; i < population; ++i)
+			for (i = 0; i < POPULATION; ++i)
 			{
 				// Affichage
 				if (_rotations[i].fitness > fitness_ref)
@@ -147,7 +143,7 @@ int main()
 			// roulette
 			double fitness_total=0.0;
 
-			for (i = 0; i < population; ++i)
+			for (i = 0; i < POPULATION; ++i)
 				fitness_total += _rotations[i].fitness;
 
 			std::uniform_real_distribution<> roulette(0, fitness_total);
@@ -164,17 +160,17 @@ int main()
 					++j;
 				}
 				retenus.push_back(j-1);
-			} while (retenus.size() < population *2);
+			} while (retenus.size() < POPULATION *2);
 			
 			
 			_rotations[1].ADN = ADN_best; // copie best soumis à mutation
 
 			if (fin_rotations != true)
 			{
-				for (i = 0; i < population; ++i)
+				for (i = 0; i < POPULATION; ++i)
 				{
 					// Reproduction
-					reproduction(_rotations[retenus[i]].ADN, _rotations[retenus[i+population]].ADN);
+					reproduction(_rotations[retenus[i]].ADN, _rotations[retenus[i+POPULATION]].ADN);
 					
 					// Mutation
 					if (mutation(gen) <= MUTATION)
@@ -200,8 +196,8 @@ int main()
 
 
 /*
-//  EMPLACEMENTS
-// --------------
+//  EMPLACEMENTS (ARBRE N-AIRE)
+// -----------------------------
 */
 
 
@@ -215,10 +211,7 @@ int main()
 		}
 		std::cout << " # RECHERCHE EMPLACEMENTS \n";
 
-		// *| ARBRE
-
 		bool fin_emplacements = false;
-
 
 		// Initialisation
 		int niveau_ref = 0;
@@ -284,7 +277,7 @@ int main()
 			{
 				std::cout << "\n # ARBRE PARCOURU\n";
 				log << "-------------" << std::endl;
-				log << "Population : " << population << std::endl;
+				log << "Population : " << POPULATION << std::endl;
 				log << "Mutation   : " << MUTATION << std::endl;
 				log << "Compteur   : " << compteur << std::endl;
 				log << "Descente   : " << descente_max << std::endl;
@@ -340,7 +333,6 @@ int main()
 				 std::cout << "-";
 			}
 
-
 			if (niveau_ref < niveau)
 			{
 				affichage_progression(niveau, niveau_ref, progression, R);
@@ -370,6 +362,7 @@ int main()
 				solution.clear();
 				goto Poursuite_exploration;
 			}
+
 		} while (!(fin_emplacements));
 
 		if (nb_solutions > 0)

@@ -215,6 +215,7 @@ void enregistrement_solution
 // -----------
 */
 
+
 class Individu
 {
 public:
@@ -331,10 +332,12 @@ void reproduction
 	}
 }
 
+
 /*
 //  EMPLACEMENTS
 // --------------
 */
+
 
 class Noeud
 {
